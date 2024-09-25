@@ -1,0 +1,5 @@
+model\Artista.class
+model\Cidade.class
+dao\CidadeDAO.class
+model\Apresentacao.class
+dao\GenericDAO.class
