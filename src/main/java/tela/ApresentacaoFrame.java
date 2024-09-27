@@ -212,12 +212,57 @@ public class ApresentacaoFrame extends JFrame {
 
     private void alterarApresentacao() {
         try {
-            // Você pode implementar um método específico para alterar apresentações
-            JOptionPane.showMessageDialog(this, "Método de alteração não implementado.");
+            int id = Integer.parseInt(idField.getText());
+
+            // Busca a apresentação existente com base no ID
+            Apresentacao apresentacao = Fachada.buscarApresentacao(id);
+            if (apresentacao == null) {
+                JOptionPane.showMessageDialog(this, "Apresentação não encontrada.");
+                return;
+            }
+
+            // Verifica e atualiza cada campo apenas se houver entrada
+            if (!dataField.getText().isEmpty()) {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                Date data = sdf.parse(dataField.getText());
+                apresentacao.setData(data);
+            }
+
+            if (!artistaField.getText().isEmpty()) {
+                String artistaNome = artistaField.getText();
+                apresentacao.setArtista(Fachada.buscarArtistaPorNome(artistaNome)); // Atualiza o artista
+            }
+
+            if (!cidadeField.getText().isEmpty()) {
+                String cidadeNome = cidadeField.getText();
+                apresentacao.setCidade(Fachada.buscarCidadePorNome(cidadeNome)); // Atualiza a cidade
+            }
+
+            if (!precoField.getText().isEmpty()) {
+                double preco = Double.parseDouble(precoField.getText());
+                apresentacao.setPrecoIngresso(preco);
+            }
+
+            if (!duracaoField.getText().isEmpty()) {
+                int duracao = Integer.parseInt(duracaoField.getText());
+                apresentacao.setDuracao(duracao);
+            }
+
+            if (!ingressosField.getText().isEmpty()) {
+                int ingressosVendidos = Integer.parseInt(ingressosField.getText());
+                apresentacao.setNumeroDeIngressosVendidos(ingressosVendidos);
+            }
+
+            // Chama a fachada para atualizar a apresentação no banco
+            Fachada.atualizarApresentacao(apresentacao);
+            JOptionPane.showMessageDialog(this, "Apresentação alterada com sucesso!");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Erro ao alterar apresentação: " + ex.getMessage());
         }
     }
+
+
+
 
     private void excluirApresentacao() {
         try {

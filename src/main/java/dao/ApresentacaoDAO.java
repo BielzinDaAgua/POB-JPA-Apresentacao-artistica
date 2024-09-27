@@ -75,6 +75,20 @@ public class ApresentacaoDAO extends DAO<Apresentacao> {
     }
 
 
+
+    public List<Apresentacao> listarApresentacoesPorCapacidadeMinima(int capacidade) {
+        open();  // Abrir o EntityManager
+        try {
+            TypedQuery<Apresentacao> query = manager.createQuery(
+                    "SELECT a FROM Apresentacao a WHERE a.cidade.capacidadePublico >= :capacidade", Apresentacao.class);
+            query.setParameter("capacidade", capacidade);
+            return query.getResultList();
+        } finally {
+            close();  // Fechar o EntityManager
+        }
+    }
+
+
     @Override
     public void deleteAll() {
         open(); // Certifique-se de abrir o EntityManager
@@ -89,5 +103,7 @@ public class ApresentacaoDAO extends DAO<Apresentacao> {
             close(); // Feche o EntityManager para evitar vazamentos de conexão
         }
     }
+
+
 
 }

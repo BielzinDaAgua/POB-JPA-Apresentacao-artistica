@@ -106,12 +106,37 @@ public class ArtistaFrame extends JFrame {
 
     private void alterarArtista() {
         try {
-            // Como o método de alteração não está implementado na Fachada, ele precisa ser adicionado ou tratado aqui.
-            JOptionPane.showMessageDialog(this, "Método de alteração não implementado.");
+            String nome = nomeField.getText();
+
+            // Busca o artista existente com base no nome
+            Artista artista = Fachada.buscarArtistaPorNome(nome);
+            if (artista == null) {
+                JOptionPane.showMessageDialog(this, "Artista não encontrado.");
+                return;
+            }
+
+            // Verifica e atualiza cada campo apenas se houver entrada
+            if (!nomeField.getText().isEmpty()) {
+                artista.setNome(nomeField.getText());
+            }
+
+            if (!generoField.getText().isEmpty()) {
+                artista.setGeneroMusical(generoField.getText());
+            }
+
+            if (!idadeField.getText().isEmpty()) {
+                int idade = Integer.parseInt(idadeField.getText());
+                artista.setIdade(idade);
+            }
+
+            // Chama a fachada para atualizar o artista
+            Fachada.atualizarArtista(artista);
+            JOptionPane.showMessageDialog(this, "Artista alterado com sucesso!");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Erro ao alterar artista: " + ex.getMessage());
         }
     }
+
 
     private void excluirArtista() {
         try {

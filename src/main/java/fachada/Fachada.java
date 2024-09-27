@@ -210,9 +210,46 @@ public class Fachada {
 
 
     public static void atualizarApresentacao(Apresentacao apresentacao) throws Exception {
+        // Verifica se a apresentação existe
+        if (apresentacao == null) {
+            throw new Exception("Apresentação não encontrada.");
+        }
+
+        // Chama o método para atualizar a apresentação no DAO
         apresentacaoDAO.update(apresentacao);
         System.out.println("Apresentação atualizada com sucesso.");
     }
+
+    public static void atualizarArtista(Artista artista) throws Exception {
+        // Verifica se a apresentação existe
+        if (artista == null) {
+            throw new Exception("Apresentação não encontrada.");
+        }
+
+        // Chama o método para atualizar a apresentação no DAO
+        artistaDAO.update(artista);
+        System.out.println("Apresentação atualizada com sucesso.");
+    }
+
+    public static void atualizarCidade(Cidade cidade) throws Exception {
+        // Verifica se a apresentação existe
+        if (cidade == null) {
+            throw new Exception("Apresentação não encontrada.");
+        }
+
+        // Chama o método para atualizar a apresentação no DAO
+        cidadeDAO.update(cidade);
+        System.out.println("Apresentação atualizada com sucesso.");
+    }
+
+
+
+
+    public static Apresentacao buscarApresentacao(int id) throws Exception {
+        return apresentacaoDAO.read(id);
+    }
+
+
 
 
     public static Artista buscarArtistaPorNome(String nome) {
@@ -224,18 +261,17 @@ public class Fachada {
         }
     }
 
-
     public static Cidade buscarCidadePorNome(String nome) {
         EntityManager manager = Util.getEntityManager();
         try {
-            DAO.beginTransaction(manager);
-            Cidade result = cidadeDAO.read(nome);
-            DAO.commitTransaction(manager);
-            return result;
+            return cidadeDAO.read(nome);  // Sem transação
         } finally {
-            manager.close();
+            manager.close();  // Certifique-se de fechar o EntityManager
         }
     }
+
+
+
 
     public static List<Apresentacao> listarApresentacoesPorData(Date data) {
         EntityManager manager = Util.getEntityManager();
@@ -266,6 +302,18 @@ public class Fachada {
         try {
             DAO.beginTransaction(manager);
             List<Apresentacao> result = apresentacaoDAO.listarApresentacoesPorCidade(nomeCidade);
+            DAO.commitTransaction(manager);
+            return result;
+        } finally {
+            manager.close();
+        }
+    }
+
+    public static List<Apresentacao> listarApresentacoesPorCapacidadeMinima(int capacidadeMinima) {
+        EntityManager manager = Util.getEntityManager();
+        try {
+            DAO.beginTransaction(manager);
+            List<Apresentacao> result = apresentacaoDAO.listarApresentacoesPorCapacidadeMinima(capacidadeMinima);
             DAO.commitTransaction(manager);
             return result;
         } finally {

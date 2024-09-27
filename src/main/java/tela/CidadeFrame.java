@@ -13,7 +13,7 @@ public class CidadeFrame extends JFrame {
     private JTextField nomeField;
     private JTextField capacidadeField;
     private JTextArea listaCidadesArea;
-    private JButton cadastrarButton, excluirButton, listarButton;
+    private JButton cadastrarButton, alterarButton, excluirButton, listarButton;
 
     public CidadeFrame() {
 
@@ -23,7 +23,7 @@ public class CidadeFrame extends JFrame {
         setLocationRelativeTo(null);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(5, 2));
+        panel.setLayout(new GridLayout(6, 2)); // Atualizando para 6 linhas para acomodar o botão de alterar
 
         panel.add(new JLabel("Nome:"));
         nomeField = new JTextField();
@@ -35,6 +35,9 @@ public class CidadeFrame extends JFrame {
 
         cadastrarButton = new JButton("Cadastrar");
         panel.add(cadastrarButton);
+
+        alterarButton = new JButton("Alterar"); // Botão para alterar cidade
+        panel.add(alterarButton);
 
         excluirButton = new JButton("Excluir");
         panel.add(excluirButton);
@@ -52,6 +55,13 @@ public class CidadeFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cadastrarCidade();
+            }
+        });
+
+        alterarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                alterarCidade();
             }
         });
 
@@ -81,6 +91,36 @@ public class CidadeFrame extends JFrame {
             JOptionPane.showMessageDialog(this, "Erro ao cadastrar cidade: " + e.getMessage());
         }
     }
+
+    private void alterarCidade() {
+        try {
+            String nome = nomeField.getText();
+
+            // Busca a cidade existente com base no nome
+            Cidade cidade = Fachada.buscarCidadePorNome(nome);
+            if (cidade == null) {
+                JOptionPane.showMessageDialog(this, "Cidade não encontrada.");
+                return;
+            }
+
+            // Verifica e atualiza cada campo apenas se houver entrada
+            if (!nomeField.getText().isEmpty()) {
+                cidade.setNome(nomeField.getText());
+            }
+
+            if (!capacidadeField.getText().isEmpty()) {
+                int capacidade = Integer.parseInt(capacidadeField.getText());
+                cidade.setCapacidadePublico(capacidade);
+            }
+
+            // Chama a fachada para atualizar a cidade
+            Fachada.atualizarCidade(cidade);
+            JOptionPane.showMessageDialog(this, "Cidade alterada com sucesso!");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao alterar cidade: " + ex.getMessage());
+        }
+    }
+
 
     private void excluirCidade() {
         try {
